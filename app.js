@@ -7,6 +7,9 @@ const cors = require("cors");
 //Routers
 const authRouter = require("./routes/auth");
 
+//Middleware
+const errorHandlerMiddleware = require("./middleware/error-handler");
+
 const app = express();
 
 app.use(cors());
@@ -16,6 +19,8 @@ app.get("/", (req, res) => {
   res.send("YTU-Reuseable-Textbooks");
 });
 app.use("/api/v1/auth", authRouter);
+
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 

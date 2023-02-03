@@ -8,7 +8,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   };
 
   if (err.code && err.code === 11000) {
-    customError.msg = `Account with this phone number ( ${err.keyValue.phone} ) already exists!`;
+    customError.msg = `Account with this email ( ${err.keyValue.email} ) already exists!`;
     customError.statusCode = 400;
   }
   return res.status(customError.statusCode).json({ msg: customError.msg });

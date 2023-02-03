@@ -10,6 +10,11 @@ const socialUserSchema = new mongoose.Schema({
     required: [true, "Email is required"],
     unique: true,
   },
+  signInType: {
+    type: String,
+    default: "social",
+  },
+  picture: String,
   rollNo: String,
 });
 
