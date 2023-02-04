@@ -74,6 +74,8 @@ const socialSignIn = async (req, res) => {
     }
   );
 
+  console.log("user", user);
+
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
