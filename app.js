@@ -7,6 +7,7 @@ const cors = require("cors");
 //Routers
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
+const bookRouter = require("./routes/book");
 
 //Middleware
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use(authenticationMiddleware);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/book", bookRouter);
 
 app.use(errorHandlerMiddleware);
 
