@@ -4,20 +4,31 @@ const bookSchema = new mongoose.Schema({
   title: {
     required: [true, "Book Title is required"],
     type: String,
+    trim: true,
+    lowercase: true,
   },
   edition: {
     type: String,
     default: "First Edition",
+    trim: true,
+    lowercase: true,
   },
   author: {
     required: [true, "Author is required"],
     type: String,
+    trim: true,
+    lowercase: true,
   },
   lastOwnerName: {
     type: String,
+    default: "Unknown",
+    trim: true,
+    lowercase: true,
   },
   lastOwnerRollNo: {
     type: String,
+    default: "Unknown",
+    trim: true,
   },
   amountInStock: {
     type: Number,

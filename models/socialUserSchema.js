@@ -10,6 +10,10 @@ const socialUserSchema = new mongoose.Schema({
     required: [true, "Email is required"],
     unique: true,
   },
+  role: {
+    type: String,
+    default: "user",
+  },
   signInType: {
     type: String,
     default: "social",

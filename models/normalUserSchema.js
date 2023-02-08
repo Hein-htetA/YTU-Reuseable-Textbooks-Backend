@@ -5,6 +5,7 @@ const normalUserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Name is required"],
+    trim: true,
   },
   password: {
     type: String,
@@ -15,7 +16,11 @@ const normalUserSchema = new mongoose.Schema({
     required: [true, "Email is required"],
     unique: true,
   },
-  rollNo: String,
+  role: {
+    type: String,
+    default: "user",
+  },
+  rollNo: { type: String, trim: true },
   signInType: {
     type: String,
     default: "normal",

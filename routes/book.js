@@ -11,6 +11,6 @@ const router = express.Router();
 
 router.route("/").post(addNewBook).patch(updateBook);
 router.route("/department/:departmentId").get(getBookByDepartment);
-router.route("/bookName/:bookName").get(searchBookByName);
+router.route("/title/:title").get(searchBookByName);
 
 module.exports = router;
