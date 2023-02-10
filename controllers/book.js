@@ -60,11 +60,7 @@ const addNewBook = async (req, res) => {
         ContentType: format,
       };
 
-      try {
-        const results = await s3Client.send(new PutObjectCommand(params));
-      } catch (error) {
-        console.log(error);
-      }
+      const results = await s3Client.send(new PutObjectCommand(params));
     }
 
     addedNewBook = await Book.create({
@@ -81,7 +77,79 @@ const addNewBook = async (req, res) => {
 };
 
 const updateBook = async (req, res) => {
-  res.send("update book");
+  const { _id, bookImage, bookPhotoId, bookPhotoUrl } = req.body;
+  let updatedBook = {};
+
+  if (bookImage) {
+    const format = bookImage.substring(
+      bookImage.indexOf("data:") + 5,
+      bookImage.indexOf(";base64")
+    );
+    const base64String = bookImage.replace(/^data:image\/\w+;base64,/, "");
+
+    const buff = Buffer.from(base64String, "base64");
+
+    const newBookPhotoId = randomUUID();
+    const newBookPhotoUrl = `https://${process.env.AWS_BOOK_BUCKET}.s3.ap-southeast-1.amazonaws.com/${newBookPhotoId}`;
+
+    const params = {
+      Bucket: process.env.AWS_BOOK_BUCKET, // The name of the bucket. For example, 'sample_bucket_101'.
+      Key: newBookPhotoId, // The name of the object. For example, 'sample_upload.txt'.
+      Body: buff,
+      ContentEncoding: "base64",
+      ContentType: format,
+    };
+
+    updatedBook = await Book.findOneAndUpdate(
+      { _id },
+      {
+        ...req.body,
+        bookPhotoId: newBookPhotoId,
+        bookPhotoUrl: newBookPhotoUrl,
+      },
+      {
+        returnDocument: "after",
+        runValidators: true,
+      }
+    );
+
+    const results = await s3Client.send(new PutObjectCommand(params));
+
+    if (bookPhotoId) {
+      const deleteObjectParams = {
+        Bucket: process.env.AWS_BOOK_BUCKET, // The name of the bucket. For example, 'sample_bucket_101'.
+        Key: bookPhotoId, // The name of the object. For example, 'sample_upload.txt'.,
+      };
+
+      const deleteResult = await s3Client.send(
+        new DeleteObjectCommand(deleteObjectParams)
+      );
+    }
+  } else if (!bookPhotoUrl && bookPhotoId) {
+    updatedBook = await Book.findOneAndUpdate(
+      { _id },
+      { ...req.body, bookPhotoId: "", bookPhotoUrl: "" },
+      { runValidators: true, returnDocument: "after" }
+    );
+    const deleteObjectParams = {
+      Bucket: process.env.AWS_BOOK_BUCKET, // The name of the bucket. For example, 'sample_bucket_101'.
+      Key: bookPhotoId, // The name of the object. For example, 'sample_upload.txt'.,
+    };
+
+    const deleteResult = await s3Client.send(
+      new DeleteObjectCommand(deleteObjectParams)
+    );
+  } else {
+    updatedBook = await Book.findOneAndUpdate({ _id }, req.body, {
+      runValidators: true,
+      returnDocument: "after",
+    });
+  }
+
+  res.status(200).json({
+    updatedBook,
+    msg: "updated successfully",
+  });
 };
 
 const searchBookByName = async (req, res) => {
