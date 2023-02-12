@@ -8,6 +8,7 @@ const cors = require("cors");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const bookRouter = require("./routes/book");
+const orderRouter = require("./routes/order");
 
 //Middleware
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -22,9 +23,10 @@ app.get("/", (req, res) => {
   res.send("YTU-Reuseable-Textbooks");
 });
 app.use("/api/v1/auth", authRouter);
-app.use(authenticationMiddleware);
+//app.use(authenticationMiddleware);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/book", bookRouter);
+app.use("/api/v1/order", orderRouter);
 
 app.use(errorHandlerMiddleware);
 

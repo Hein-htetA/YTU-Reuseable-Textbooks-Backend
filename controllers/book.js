@@ -30,6 +30,7 @@ const addNewBook = async (req, res) => {
       {
         $set: {
           amountInStock: req.body.amountInStock + bookInDatabase.amountInStock,
+          departments: [...req.body.departments, ...bookInDatabase.departments],
         },
       },
       options
@@ -165,6 +166,12 @@ const searchBookByName = async (req, res) => {
         },
       },
     },
+    {
+      $project: {
+        lastOwnerName: false,
+        lastOwnerRollNo: false,
+      },
+    },
   ];
   const books = await Book.aggregate(pipeline).limit(10);
   res.send({ books, msg: "fetched successfully", nbHits: books.length });
@@ -177,7 +184,7 @@ const getBookByDepartment = async (req, res) => {
   }).select(`
     -lastOwnerName
     -lastOwnerRollNo
-    -departments`);
+    `);
   res.status(200).json({
     booksByDepartment,
     msg: "Fetch books by department successfully",
