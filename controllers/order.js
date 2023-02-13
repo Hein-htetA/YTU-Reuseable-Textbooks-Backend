@@ -34,6 +34,17 @@ const addNewOrder = async (req, res) => {
     throw new BadRequestError(error);
   }
 
+  const bulkWriteArray = booksInDatabase.map((book) => {
+    return {
+      updateOne: {
+        filter: { _id: book._id },
+        update: { amountInStock: book._doc.amountInStock - book._doc.count },
+      },
+    };
+  });
+
+  await Book.bulkWrite(bulkWriteArray); //update amount in stock after successful order
+
   const order = await Order.create({ ...req.body, books: booksInDatabase });
 
   res.status(200).json({ order, msg: "Ordered Successfully" });
@@ -42,13 +53,11 @@ const addNewOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   const { userId } = req.params;
   const orders = await Order.find({ userId });
-  res
-    .status(200)
-    .json({
-      orders,
-      nbHits: orders.length,
-      msg: "Fetched Orders Successfully",
-    });
+  res.status(200).json({
+    orders,
+    nbHits: orders.length,
+    msg: "Fetched Orders Successfully",
+  });
 };
 
 module.exports = {

@@ -60,12 +60,19 @@ const bookInOrderSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema(
   {
-    userId: mongoose.ObjectId,
+    customerId: {
+      type: mongoose.ObjectId,
+      required: ["Customer Id is required"],
+    },
+    customerName: {
+      type: String,
+      required: ["Customer Name is required"],
+    },
     books: [bookInOrderSchema],
     status: {
       type: String,
       enum: {
-        values: ["pending", "aborted", "finalized"],
+        values: ["pending", "canceled", "completed"],
         message: `{VALUE} is not supported`,
       },
       default: "pending",
