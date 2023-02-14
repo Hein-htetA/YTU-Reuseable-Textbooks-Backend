@@ -12,6 +12,10 @@ const socialUserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    enum: {
+      values: ["user", "admin"],
+      message: "{VALUE} is not supported",
+    },
     default: "user",
   },
   signInType: {

@@ -18,6 +18,10 @@ const normalUserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    enum: {
+      values: ["user", "admin"],
+      message: "{VALUE} is not supported",
+    },
     default: "user",
   },
   rollNo: { type: String, trim: true },

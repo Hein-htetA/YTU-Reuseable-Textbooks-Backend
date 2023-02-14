@@ -50,8 +50,8 @@ const addNewOrder = async (req, res) => {
   res.status(200).json({ order, msg: "Ordered Successfully" });
 };
 
-const getOrders = async (req, res) => {
-  const { userId } = req.params;
+const getOrdersById = async (req, res) => {
+  const { userId } = req.userId;
   const orders = await Order.find({ userId });
   res.status(200).json({
     orders,
@@ -60,7 +60,42 @@ const getOrders = async (req, res) => {
   });
 };
 
+const getOrdersByQuery = async (req, res) => {
+  const { start, end, status } = req.query;
+  let filter = {};
+  if (status) {
+    filter = {
+      createdAt: { $gt: start, $lt: end },
+      status,
+    };
+  } else {
+    filter = {
+      createdAt: { $gt: start, $lt: end },
+    };
+  }
+  const orders = await Order.find(filter);
+
+  res.status(200).json({
+    orders,
+    nbHits: orders.length,
+    msg: "Fetch Orders for this query successfully",
+  });
+};
+
+const updateOrder = async (req, res) => {
+  const updatedOrder = await Order.findOneAndUpdate(
+    { _id: req.body.orderId },
+    { status: req.body.status },
+    {
+      new: true,
+    }
+  );
+  res.status(200).json({ updatedOrder, msg: "Order Updated Successfully" });
+};
+
 module.exports = {
   addNewOrder,
-  getOrders,
+  getOrdersById,
+  getOrdersByQuery,
+  updateOrder,
 };

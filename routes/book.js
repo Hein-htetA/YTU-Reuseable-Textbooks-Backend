@@ -1,4 +1,6 @@
 const express = require("express");
+const authenticationMiddleware = require("../middleware/authenticationMiddleware");
+const authenticateUserRoleMiddleware = require("../middleware/authenticateUserRoleMiddleware");
 
 const {
   addNewBook,
@@ -9,7 +11,11 @@ const {
 
 const router = express.Router();
 
-router.route("/").post(addNewBook).patch(updateBook);
+router
+  .route("/")
+  .post(authenticationMiddleware, authenticateUserRoleMiddleware, addNewBook)
+  .patch(authenticationMiddleware, authenticateUserRoleMiddleware, updateBook);
+
 router.route("/department/:departmentId").get(getBookByDepartment);
 router.route("/title/:title").get(searchBookByName);
 

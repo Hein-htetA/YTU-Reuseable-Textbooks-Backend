@@ -10,9 +10,13 @@ const register = async (req, res) => {
   const user = await NormalUser.create(req.body);
   user.password = undefined;
 
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  });
+  const token = jwt.sign(
+    { userId: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
 
   res.status(201).json({
     user,
@@ -34,9 +38,13 @@ const login = async (req, res) => {
 
   user.password = undefined;
 
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  });
+  const token = jwt.sign(
+    { userId: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
 
   res.status(200).json({
     user,
@@ -74,11 +82,13 @@ const socialSignIn = async (req, res) => {
     }
   );
 
-  console.log("user", user);
-
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  });
+  const token = jwt.sign(
+    { userId: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
 
   res.status(200).json({ user, token, msg: "Social Sign In Successfully" });
 };
