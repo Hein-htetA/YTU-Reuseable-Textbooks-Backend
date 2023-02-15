@@ -12,7 +12,6 @@ const orderRouter = require("./routes/order");
 
 //Middleware
 const errorHandlerMiddleware = require("./middleware/error-handler");
-const authenticationMiddleware = require("./middleware/authenticationMiddleware");
 
 const app = express();
 
@@ -23,7 +22,6 @@ app.get("/", (req, res) => {
   res.send("YTU-Reuseable-Textbooks");
 });
 app.use("/api/v1/auth", authRouter);
-//app.use(authenticationMiddleware);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/book", bookRouter);
 app.use("/api/v1/order", orderRouter);

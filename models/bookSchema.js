@@ -33,12 +33,14 @@ const bookSchema = new mongoose.Schema({
   amountInStock: {
     type: Number,
     default: 1,
+    min: [0, "Stock cannot be less than 0"],
   },
   bookPhotoId: String,
   bookPhotoUrl: String,
   price: {
     type: Number,
     required: [true, "Price must be provided"],
+    min: [0, "Price cannot be less than 0"],
   },
   availableChapters: {
     required: [true, "Available Chapters must be provided"],
