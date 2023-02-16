@@ -158,6 +158,13 @@ const searchBookByName = async (req, res) => {
 
   const pipeline = [
     {
+      $match: {
+        amountInStock: {
+          $gt: 0,
+        },
+      },
+    },
+    {
       $search: {
         index: "title",
         autocomplete: {
@@ -181,6 +188,7 @@ const getBookByDepartment = async (req, res) => {
   const { departmentId } = req.params;
   const booksByDepartment = await Book.find({
     departments: departmentId,
+    amountInStock: { $gt: 0 },
   }).select(`
     -lastOwnerName
     -lastOwnerRollNo

@@ -15,7 +15,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/", (req, res) => {
