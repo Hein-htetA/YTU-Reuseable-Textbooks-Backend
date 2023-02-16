@@ -158,18 +158,18 @@ const searchBookByName = async (req, res) => {
 
   const pipeline = [
     {
-      $match: {
-        amountInStock: {
-          $gt: 0,
-        },
-      },
-    },
-    {
       $search: {
         index: "title",
         autocomplete: {
           query: title,
           path: "title",
+        },
+      },
+    },
+    {
+      $match: {
+        amountInStock: {
+          $gt: 0,
         },
       },
     },
