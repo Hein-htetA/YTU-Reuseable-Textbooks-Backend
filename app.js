@@ -1,8 +1,19 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
-const connectDB = require("./db/connect");
+// const connectDB = require("./db/connect");
+const mongoose = require("mongoose");
 const cors = require("cors");
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
 
 //Routers
 const authRouter = require("./routes/auth");
@@ -31,16 +42,22 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGO_URI);
-    app.listen(port, () =>
-      console.log(`Sever is listening at port ${port}....`)
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
-start();
+// const start = async () => {
+//   try {
+//     await connectDB(process.env.MONGO_URI);
+//     app.listen(port, () =>
+//       console.log(`Sever is listening at port ${port}....`)
+//     );
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+// start();
+
+connectDB().then(() => {
+  app.listen(port, () => {
+    console.log("listening for requests");
+  });
+});
 
 module.exports = app;
